@@ -225,11 +225,8 @@ module RocketAMF
 
       # Generic object serializer
       props = {}
-      @ignored_props ||= Object.new.public_methods
-      (ruby_obj.public_methods - @ignored_props).each do |method_name|
-        # Add them to the prop hash if they take no arguments
-        method_def = ruby_obj.method(method_name)
-        props[method_name.to_s] = ruby_obj.send(method_name) if method_def.arity == 0
+      (ruby_obj.instance_variables).each do |method_name|
+        props[method_name[1..-1]] = ruby_obj.instance_variable_get(method_name) 
       end
       props
     end
